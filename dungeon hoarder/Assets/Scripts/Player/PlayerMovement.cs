@@ -4,50 +4,43 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f; 
-    public Rigidbody2D rb;
-    public float jumpForce = 10f;
+    [SerializeField] private float moveSpeed = 5f; 
+    private Rigidbody rb;
+    [SerializeField] private float jumpForce = 10f;
+    private bool isGrounded = true; // check if player is on the ground
+    [SerializeField] private bool canJump = false; // jump er slået til eller fra valg fri. 
+
+    //[SerializeField] Animator animator;
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>(); // Get the Rigidbody2D component attached to the player
+        rb = GetComponent<Rigidbody>(); // Get the Rigidbody component attached to the player
     }
 
     // Update is called once per frame
     void Update()
     {
         float moveX = Input.GetAxisRaw("Horizontal"); // Get horizontal input
-        float moveY = Input.GetAxisRaw("Vertical");   // Get vertical input
-        Vector2 movement = new Vector2(moveX, moveY).normalized; // Create a normalized movement vector
-        rb.velocity = movement * moveSpeed; // Set the player's velocity based on input and speed
+        float moveZ = Input.GetAxisRaw("Vertical");   // Get vertical input
+
+        float yVelocity = rb.velocity.y;
+        Vector3 movement = new Vector3(moveX, 0, moveZ).normalized;
+        movement *= moveSpeed * Time.deltaTime;
+        movement.y = yVelocity;
+        rb.velocity = movement; // Set the player's velocity based on input and speed
+       
         
-        Camera.main.transform.position = new Vector3(rb.position.x, rb.position.y, -10f); // Follow the player with the camera
-
-        if (Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Space) && canJump && isGrounded) 
         {
-            Debug.Log("Space key was pressed."); // jump action
-            rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse); // Apply an upward force to the player for jumping
+            rb.velocity = Vector3.up * jumpForce * Time.deltaTime; // Apply an upward force for jumping 
+            isGrounded = false; 
         }
-        if(Input.GetKeyUp(KeyCode.W))
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            Debug.Log("W key was released."); // move up
-            transform.position += Vector3.up * Time.deltaTime * moveSpeed; // Move the player up by 1 unit on key release
-
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            Debug.Log("S key is being held down."); // move down
-            transform.position += Vector3.down * Time.deltaTime * moveSpeed; // Move the player down while key is held
-        }
-        if(Input.GetKeyDown(KeyCode.A))
-        {
-            Debug.Log("A key was pressed."); // move left
-            transform.position += Vector3.left * Time.deltaTime * moveSpeed; // Move the player left on key press
-        }
-        if(Input.GetKeyUp(KeyCode.D))
-        {
-            Debug.Log("D key was released."); // move right
-            transform.position += Vector3.right * Time.deltaTime * moveSpeed; // Move the player right on key release
+            isGrounded = true;
         }
     }
 }
