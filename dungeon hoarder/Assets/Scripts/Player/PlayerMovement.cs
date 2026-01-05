@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpForce = 10f;
     private bool isGrounded = true; // check if player is on the ground
     [SerializeField] private bool canJump = false; // jump er slået til eller fra valg fri. 
-
+    [SerializeField] private float smoothingRotation = 5f; 
     //[SerializeField] Animator animator;
     // Start is called before the first frame update
     void Start()
@@ -28,9 +28,12 @@ public class PlayerMovement : MonoBehaviour
         movement *= moveSpeed * Time.deltaTime;
         movement.y = yVelocity;
         rb.velocity = movement; // Set the player's velocity based on input and speed
-       
-        
-        if(Input.GetKeyDown(KeyCode.Space) && canJump && isGrounded) 
+        rb.rotation = Quaternion.LookRotation(new Vector3(moveX, 0, moveZ)); // Rotate player to face movement direction
+        transform.rotation = Quaternion.Slerp(transform.rotation, rb.rotation, smoothingRotation * Time.deltaTime);
+        //sætter din rotation til at være den samme som din bevægelse også selvom vi ikke bevær os.
+        transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w);
+
+        if (Input.GetKeyDown(KeyCode.Space) && canJump && isGrounded) 
         {
             rb.velocity = Vector3.up * jumpForce * Time.deltaTime; // Apply an upward force for jumping 
             isGrounded = false; 
