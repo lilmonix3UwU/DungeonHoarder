@@ -25,13 +25,17 @@ public class PlayerMovement : MonoBehaviour
 
         float yVelocity = rb.velocity.y;
         Vector3 movement = new Vector3(moveX, 0, moveZ).normalized;
+        if(movement.magnitude> 0)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(movement);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, smoothingRotation * Time.deltaTime);
+        }
+        
+
         movement *= moveSpeed * Time.deltaTime;
         movement.y = yVelocity;
         rb.velocity = movement; // Set the player's velocity based on input and speed
-        rb.rotation = Quaternion.LookRotation(new Vector3(moveX, 0, moveZ)); // Rotate player to face movement direction
-        transform.rotation = Quaternion.Slerp(transform.rotation, rb.rotation, smoothingRotation * Time.deltaTime);
-        //sætter din rotation til at være den samme som din bevægelse også selvom vi ikke bevær os.
-        transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w);
+      
 
         if (Input.GetKeyDown(KeyCode.Space) && canJump && isGrounded) 
         {

@@ -1,27 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class WeaponClass : MonoBehaviour
+[CreateAssetMenu(menuName = "Combat/Weapon Data", fileName = "WeaponData_")]
+public class WeaponClass : ScriptableObject
 {
-    [SerializeField] private string weaponName;
-    [SerializeField] private int damage; 
-    [SerializeField] private float attackSpeed;
-    [SerializeField] private float cooldownAttack;  
+    [Header("Identity")]
+    [SerializeField] private string weaponName = "Weapon";
 
+    [Header("Combat")]
+    [SerializeField] private int damage = 10;
+    [SerializeField] private float attackSpeed = 1f;
+    [SerializeField] private float attackCooldown = 0.5f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        if(weaponName != null)
-        {
-            Debug.Log("Equipped weapon: " + weaponName);
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public string WeaponName => weaponName;
+    public int Damage => damage;
+    public float AttackSpeed => attackSpeed;
+    public float AttackCooldown => attackCooldown;
 }
