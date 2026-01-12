@@ -43,23 +43,23 @@ public class Room : MonoBehaviour
         }
     }
 
-    public bool IsNorth(bool x)
+    public bool IsNorth()
     {
         return north;
     }
-    public bool IsSouth(bool x)
+    public bool IsSouth()
     {
         return south;
     }
-    public bool IsEast(bool x)
+    public bool IsEast()
     {
         return east;
     }
-    public bool IsWest(bool x)
+    public bool IsWest()
     {
         return west;
     }
-    public List<Door> GetDoors(List<Door> x)
+    public List<Door> GetDoors()
     {
         return doors;
     }

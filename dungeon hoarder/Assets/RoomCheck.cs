@@ -5,12 +5,17 @@ using UnityEngine;
 public class RoomCheck : MonoBehaviour
 {
     bool checkActive = false;
+    bool roomCheck = false;
+    private void Start()
+    {
+        checkActive = true;
+    }
     private void OnTriggerStay(Collider other)
     {
         if (checkActive)
         { 
-
-
+            roomCheck = true;
+            checkActive = false;
 
 
 
@@ -18,11 +23,9 @@ public class RoomCheck : MonoBehaviour
         }
     }
 
-    public IEnumerator Pause()
+    public bool isRoom()
     {
-        yield return new WaitForSeconds(0.1f);
+        return roomCheck;
     }
-
-
 
 }
